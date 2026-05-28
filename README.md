@@ -3,7 +3,7 @@
 > Personal notes from completing every SQL Injection lab on [PortSwigger Web Security Academy](https://portswigger.net/web-security/sql-injection).  
 > Documented for learning purposes as part of my web application security journey.
 
-📝 **XSS Write-up:** [[https://medium.com/@sukansh.07/how-i-hacked-an-android-app-a-beginners-guide-to-mobile-penetration-testing-8ae769003444](https://medium.com/@sukansh.07/sql-injection-masterclass-solving-all-18-portswigger-labs-with-payloads-ee5969ae5986)](https://medium.com/@sukansh.07/sql-injection-masterclass-solving-all-18-portswigger-labs-with-payloads-ee5969ae5986)*  
+📝 **XSS Write-up:** (https://medium.com/@sukansh.07/sql-injection-masterclass-solving-all-18-portswigger-labs-with-payloads-ee5969ae5986)](https://medium.com/@sukansh.07/sql-injection-masterclass-solving-all-18-portswigger-labs-with-payloads-ee5969ae5986)*  
 🔗 **LinkedIn:** [Connect with me](#) *(https://www.linkedin.com/in/sukanshh/)*  
 
 ---
