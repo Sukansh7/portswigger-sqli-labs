@@ -1,0 +1,8 @@
+Lab #2 SQL injection vulnerability allowing login bypass
+
+END GOAL: login as administrator.
+
+--------------------------------------------
+
+administrator'-- ==> enter this in the username section.
+and enter anything the the password section.
